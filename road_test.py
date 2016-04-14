@@ -8,6 +8,9 @@ car3 = Car([1000,0])
 
 car_list = [car1, car2, car3]
 car_list = road.loop(car_list)
+
+sim = Sim()
+
 def test_reset_car_position_on_loop():
 	# print("road.loop(car_list)[0].frontofcar: ", road.loop(car_list)[0].frontofcar)
 	assert	car_list[0].frontofcar[0] == 0
@@ -24,8 +27,9 @@ def test_check_car_values():
 def test_road_value():
 	assert road.length == 1000
 
-# def car_has_a_length():
-# 	pass
+def test_car_creater():
+	assert len(sim.create_cars()) == 30
+	
+	car_set = set([i.frontofcar[0] for i in sim.create_cars()])
 
-# def car_has_a():
-# 	pass
+	assert len(car_set) == 30

@@ -23,11 +23,16 @@ class Car():
 		for car in car_list:
 			if self.frontofcar[0] == self.frontofcar[1]:
 				pass
-
+	def collision_check():
+		pass
 
 class Sim():
 	def __init__(self):
 		self.num_of_cars = 30
 
 	def create_cars(self):
-		cars = []
+		car_list = [Car([i * 33, 0]) for i in range(self.num_of_cars)]
+		return car_list
+
+	def move_cars(self):
+		pass
