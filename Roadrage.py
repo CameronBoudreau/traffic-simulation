@@ -12,27 +12,38 @@ class Road():
 		return car_list
 
 class Car():
-	def __init__(self, frontofcar, max_speed = 33.3, length = 5,):
+	def __init__(self, frontofcar, max_speed = 33.3, length = 5, speed = 0):
 		self.length = length
 		self.frontofcar = frontofcar
+		self.bumper = self.frontofcar[0] - 5
 		self.max_speed = max_speed
-		self.speed = 0
+		self.speed = speed
 		self.accel = 2
 
 	def check_car_distance(self, car_list):
 		for car in car_list:
 			if self.frontofcar[0] == self.frontofcar[1]:
 				pass
-	def collision_check():
-		pass
+	# def collision_check(self, next_car):
+			# if self.frontofcar <
+			# if self.frontofcar[0] == self.frontofcar[1]:
+
+
+	# def move_car(self, car_list):
+		
+	# 	pass
 
 class Sim():
 	def __init__(self):
 		self.num_of_cars = 30
+		self.car_list = []
 
 	def create_cars(self):
 		car_list = [Car([i * 33, 0]) for i in range(self.num_of_cars)]
 		return car_list
 
-	def move_cars(self):
+	def update_positions(self):
+		for car in self.car_list[:-2]:
+			car.move_car(car+1)
 		pass
+

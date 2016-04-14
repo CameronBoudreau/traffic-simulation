@@ -22,6 +22,7 @@ def test_check_car_values():
 	assert car1.max_speed == 33.3
 	assert car1.speed == 0
 	assert car1.accel == 2
+	assert car1.bumper == 45
 
 
 def test_road_value():
