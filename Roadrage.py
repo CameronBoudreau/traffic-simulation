@@ -5,8 +5,6 @@ class Road():
 		self.curve = curve
 
 	def road_loop(self , car_list, car, next_car):
-		"""START HERE ASSHOLES"""
-		
 		print("Car position: ", car.position)
 		if next_car.bumper < 6:
 			car.position[0] = 1000
