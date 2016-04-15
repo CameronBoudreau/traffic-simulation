@@ -34,3 +34,7 @@ def test_car_creater():
 	car_set = set([i.front_of_car[0] for i in sim.create_cars()])
 
 	assert len(car_set) == 30
+
+
+def test_change_position():
+	

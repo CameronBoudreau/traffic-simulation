@@ -3,10 +3,8 @@ class Road():
 		self.length = length
 		self.curve = curve
 
-	def loop(self, car_list):
-
-		if car_list[-1].position[0] >= self.length:
-			car_list[-1].position[0] = 0
+	def loop(self, car):
+			car_list[-1].position[0] = 1000 -
 
 		car_list.insert(0,car_list.pop())
 		return car_list
@@ -34,13 +32,21 @@ class Car():
 			else:
 				self.speed = next_car.speed
 
-	def change_position(self):
-		self.position
+	def change_position(self, road):
+		if self.position[0] + self.speed > 1000:
+			self.position[0] = (self.position[0] - 1000) + self.speed
+		else:
+			self.position[0] += self.speed
 
 
-	def move_car(self, car_list):
+	def move_car(self, car):
+		self.position[0] += self.speed
+		if self.needs_loop():
+			return True
 		self.change_position()
 		self.collision_check()
+		if self.will_slow():
+			self.speed -= 2
 
 
 class Sim():
@@ -52,7 +58,10 @@ class Sim():
 		car_list = [Car([i * 30, 0]) for i in range(self.num_of_cars)]
 		return car_list
 
-	def update_positions(self):
-		for car in self.car_list[:-2]:
+	def update_positions(self, road):
+		for car in self.car_list:
 			car.move_car(car+1)
+			if self.needs_loop:
+				road.loop(car)
+			car.collision_check()
 		pass
