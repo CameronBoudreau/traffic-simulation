@@ -5,10 +5,7 @@ class Road():
 		self.curve = curve
 
 
-	def road_loop(self, car_list, car, next_car):
-		car.position[0] = (car.position[0] - 1000)
-		car_list.insert(0,car_list.pop())
-		return car_list
+	
 
 class Car():
 	def __init__(self, position, max_speed = 33.3, length = 5, speed = 10):

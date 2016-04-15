@@ -8,6 +8,9 @@ car3 = Car([1000,0])
 car4 = Car([68,0], speed=5)
 car5 = Car([59,0])
 car6 = Car([500,0])
+car7 = Car([Car([500,0])])
+car8 =
+car9 = 
 
 car_list = [car1, car2, car3]
 car_list = road.loop(car_list, car3)
@@ -38,18 +41,6 @@ def test_car_creater():
 
 	assert len(car_set) == 30
 
-<<<<<<< HEAD
-# def test_decelerate_car():
-# 	assert s
-
-def test_move_car():
-	assert car1.position[0] == 60
-	assert car1.position[1] == 1
-
-def car_list
-
-=======
-""" Must comment out the random decelleration to test this."""
 def test_change_speed():
 	car2.change_speed()
 	assert car2.speed == 33.3
@@ -67,4 +58,4 @@ def test_collision_check():
 def test_check_move_car():
 	car6.move_car()
 	assert car6.position[0] == 510
->>>>>>> 13469830b798f291ca234ab50e86862fb5e8281c
+
