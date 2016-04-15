@@ -36,5 +36,6 @@ def test_car_creater():
 	assert len(car_set) == 30
 
 
-def test_change_position():
+# def test():
+# 	assert
 	

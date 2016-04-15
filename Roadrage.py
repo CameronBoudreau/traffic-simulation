@@ -1,3 +1,5 @@
+import random
+
 class Road():
 	def __init__(self, length = 1000,curve = 0):
 		self.length = length
@@ -23,6 +25,12 @@ class Car():
 	# 		if self.position[0] == self.position[1]:
 	# 			pass
 
+	def decelerate(self):
+		if random.randint(1,10)== 7:
+			return True
+
+
+
 	def collision_check(self, next_car):
 		difference = next_car.rear_bumper[0] - self.position[0]
 		if difference < self.speed:
@@ -34,20 +42,26 @@ class Car():
 
 	# def change_position(self, road):
 	# 	if self.position[0] + self.speed > 1000:
-	#
+
 	# 	else:
 	# 		self.position[0] += self.speed
 
-
 	def move_car(self):
 		self.position[0] += self.speed
-		self.speed += self.accel
+		if decelerate():
+			self.speed -= self.accel
+		else:
+			self.speed += self.accel
 		# if self.needs_loop():
 		# 	return True
 		# self.change_position()
 		# self.collision_check()
 		# if self.will_slow():
 		# 	self.speed -= 2
+
+	def needs_loop(self):
+		if self.position[0] > 1000:
+			return True
 
 
 class Sim():
@@ -66,3 +80,5 @@ class Sim():
 				road.loop(car)
 			car.collision_check(car_list[car+1])
 		pass
+
+x = Sim()
