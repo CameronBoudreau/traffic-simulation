@@ -35,7 +35,12 @@ def test_car_creater():
 
 	assert len(car_set) == 30
 
+# def test_decelerate_car():
+# 	assert s
 
-# def test():
-# 	assert
-	
+def test_move_car():
+	assert car1.position[0] == 60
+	assert car1.position[1] == 1
+
+def car_list
+
