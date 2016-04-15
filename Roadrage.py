@@ -1,12 +1,11 @@
 import random
-
 class Road():
 	def __init__(self, length = 1000,curve = 0):
 		self.length = length
 		self.curve = curve
 
-	def loop(self, car):
-		self.position[0] = (self.position[0] - 1000)
+	def loop(self , car_list, car):
+		car.position[0] = (car.position[0] - 1000)
 
 		car_list.insert(0,car_list.pop())
 		return car_list
@@ -15,7 +14,7 @@ class Car():
 	def __init__(self, position, max_speed = 33.3, length = 5, speed = 10):
 		self.length = length
 		self.position = position
-		self.rear_rear_position = self.position[0] - 5
+		self.bumper = self.position[0] - 5
 		self.max_speed = max_speed
 		self.speed = speed
 		self.accel = 2
@@ -25,17 +24,19 @@ class Car():
 	# 		if self.position[0] == self.position[1]:
 	# 			pass
 
-	def decelerate(self):
-		if random.randint(1,10)== 7:
-			return True
-
-
+	def change_speed(self):
+		# if random.randint(1,10) == 7:
+		# 	self.speed -= self.accel
+		if self.speed + self.accel > self.max_speed:
+			self.speed = self.max_speed
+		else:
+			self.speed += self.accel
 
 	def collision_check(self, next_car):
-		difference = next_car.rear_bumper[0] - self.position[0]
+		difference = next_car.bumper - self.position[0]
 		if difference < self.speed:
 			if difference - self.speed <= 0:
-				self.position[0] = next_car.rear_bumper[0] - 2
+				self.position[0] = next_car.bumper - 2
 				self.speed = 0
 			else:
 				self.speed = next_car.speed
@@ -48,10 +49,7 @@ class Car():
 
 	def move_car(self):
 		self.position[0] += self.speed
-		if decelerate():
-			self.speed -= self.accel
-		else:
-			self.speed += self.accel
+		self.position[1] +=  1
 		# if self.needs_loop():
 		# 	return True
 		# self.change_position()
@@ -70,15 +68,18 @@ class Sim():
 		self.car_list = []
 
 	def create_cars(self):
-		car_list = [Car([i * 30, 0]) for i in range(self.num_of_cars)]
-		return car_list
+		self.car_list = [Car([i * 30, 0]) for i in range(self.num_of_cars)]
+		return self.car_list
 
 	def update_positions(self, road):
-		for car in self.car_list:
+		for i, car in enumerate(self.car_list):
+			if car != self.car_list[-1]:
+				next_car = self.car_list[i+1]
+			else:
+				next_car = self.car_list[0]
 			car.move_car()
-			if self.needs_loop(car):
-				road.loop(car)
-			car.collision_check(car_list[car+1])
+			car.change_speed()
+			if car.needs_loop():
+				road.loop(self.car_list, car)
+			car.collision_check(next_car)
 		pass
-
-x = Sim()
