@@ -8,18 +8,19 @@ car3 = Car([1000,0])
 car4 = Car([68,0], speed=5)
 car5 = Car([59,0])
 car6 = Car([500,0])
-car7 = Car([Car([500,0])])
-car8 =
-car9 = 
+car7 = Car([300,0])
+car8 = Car([120,0])
+car9 = Car([995,0])
 
 car_list = [car1, car2, car3]
-car_list = road.loop(car_list, car3)
-
 sim = Sim()
 
 def test_reset_car_position_on_loop():
 	# print("road.loop(car_list)[0].position: ", road.loop(car_list)[0].position)
-	assert	car_list[0].position[0] == 0
+	car_list = [car7, car8, car9]
+	car_list = road.road_loop(car_list, car9, car7)
+	print("Car list after loop: ", car_list[0].position[0])
+	assert car_list[0].position[0] == 5
 
 def test_check_car_values():
 
@@ -57,5 +58,9 @@ def test_collision_check():
 
 def test_check_move_car():
 	car6.move_car()
-	assert car6.position[0] == 510
+	assert car6.position == [510, 1]
 
+# def test_update_positions():
+# 	car_list = [car7, car8, car9]
+# 	sim.update_car_positions(road)
+# 	assert car6.positions 
