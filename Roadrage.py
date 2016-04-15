@@ -32,11 +32,11 @@ class Car():
 			else:
 				self.speed = next_car.speed
 
-	def change_position(self, road):
-		if self.position[0] + self.speed > 1000:
-
-		else:
-			self.position[0] += self.speed
+	# def change_position(self, road):
+	# 	if self.position[0] + self.speed > 1000:
+	#
+	# 	else:
+	# 		self.position[0] += self.speed
 
 
 	def move_car(self):
