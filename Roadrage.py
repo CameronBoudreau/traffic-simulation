@@ -21,7 +21,7 @@ class Car():
 		self.speed = speed
 		self.accel = 2
 
-	
+
 
 	def change_speed(self):
 		# if random.randint(1,10) == 7:
@@ -71,4 +71,3 @@ class Sim():
 				road.road_loop(self.car_list, car)
 			car.change_speed()
 			car.collision_check(next_car)
-		pass
