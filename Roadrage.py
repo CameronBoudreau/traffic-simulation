@@ -35,7 +35,8 @@ class Car():
 	def collision_check(self, next_car):
 		difference = next_car.bumper - self.position[0]
 		if difference < self.speed:
-			if difference - self.speed <= 0:
+			print("Difference: ", difference)
+			if difference <= 0:
 				self.position[0] = next_car.bumper - 2
 				self.speed = 0
 			else:
