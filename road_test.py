@@ -66,14 +66,14 @@ def find_next_car():
 	assert find_next_car(car12, car_list) == car10
 
 def test_update_positions():
-	car13 = Car([6,0])
-	car14 = Car([450,0])
+	car13 = Car([1,0], speed=3)
+	car14 = Car([450,0], speed=32)
 	car15 = Car([995,0])
-
+	""" Have to change the append methods to look for = 2, not 29 since there are only 3 in this list """
 	sim.car_list = [car13, car14, car15]
-	# print("This is what's actualy in the car list: ", car14, car15)
 	sim.update_positions(road)
-	assert  sim.car_position_list == [[16,1], [460, 1], [1000,1]]
+	assert sim.car_position_list == [[4,1], [482, 1], [1000, 1]]
+	assert sim.car_speed_list == [5, 33.3, 0]
 
 
 
