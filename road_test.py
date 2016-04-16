@@ -58,6 +58,25 @@ def test_check_move_car():
 	car6.move_car()
 	assert car6.position == [510, 1]
 
+def find_next_car():
+	car_list = [car10, car11, car12]
+	
+	assert find_next_car(car10, car_list) == car11
+	assert find_next_car(car11, car_list) == car12
+	assert find_next_car(car12, car_list) == car10
+
+def test_update_positions():
+	car13 = Car([110,0])
+	car14 = Car([450,0])
+	car15 = Car([997,0])
+
+	sim.car_list = [car13, car14, car15]
+	# print("This is what's actualy in the car list: ", car14, car15)
+	sim.update_positions(road)
+	assert  sim.car_position_list == [[120,1], [460, 1], [7,1]] 
+
+
+
 # def test_update_positions():
 # 	car_list = [car7, car8, car9]
 # 	sim.update_car_positions(road)

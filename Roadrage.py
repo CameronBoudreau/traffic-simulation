@@ -5,6 +5,7 @@ class Road():
 		self.curve = curve
 
 	def road_loop(self , car_list, car, next_car):
+		print("Car position: ", car.position)
 		if next_car.bumper < 6:
 			car.position[0] = 1000
 		else:
@@ -24,7 +25,7 @@ class Car():
 
 
 	def __str__(self):
-		print("I'm at position {}".format(self.position))
+		"I'm at position {}".format(self.position)
 
 
 	def change_speed(self):
@@ -37,15 +38,20 @@ class Car():
 
 	def collision_check(self, next_car):
 		difference = next_car.bumper - self.position[0]
+		print("In collision change car pos: ", self.position)
+		print("difference: ", difference)
 		if difference < self.speed:
 			if difference <= 0:
 				self.position[0] = next_car.bumper - 2
 				self.speed = 0
 			else:
 				self.speed = next_car.speed
+		print("Last collision change car pos: ", self.position)
+		return self.position
+
 
 	def move_car(self):
-		print("Position after move: ", self.position)
+		print("Position before move: ", self.position)
 		self.position[0] += self.speed
 		self.position[1] +=  1
 		print("Position after move: ", self.position)
@@ -59,27 +65,38 @@ class Sim():
 	def __init__(self):
 		self.num_of_cars = 30
 		self.car_list = []
+		self.car_position_list = []
+
 
 	def create_cars(self):
 		self.car_list = [Car([i * 30, 0]) for i in range(self.num_of_cars)]
 		return self.car_list
 
 	def update_positions(self, road):
-		car_position_list = []
 		for i, car in enumerate(self.car_list):
-			find_next_car(car, self.car_list)
+			print("Run ", i)
+			next_car = self.find_next_car(car, self.car_list, i)
+			# print("next car: ", str(next_car))
 			print("Before move")
 			car.move_car()
 			print("After move")
 			if car.needs_road_loop():
 				road.road_loop(self.car_list, car, next_car)
+			print("After loop")
 			car.change_speed()
-			car.collision_check(next_car)
-
+			print("After speed change car pos: ", car.position)
+			car.position = car.collision_check(next_car)
+			print("After speed collision car pos: ", car.position)
 			self.car_position_list.append(car.position)
 
-	def find_next_car(car, car_list):
-				if car != self.car_list[-1]:
-					next_car = self.car_list[i+1]
-				else:
-					next_car = self.car_list[0]
+			print("Sim list: ", self.car_position_list)
+		return self.car_position_list
+
+
+	def find_next_car(self, car, car_list, i):
+		if car != self.car_list[-1]:
+			next_car = self.car_list[i+1]
+		else:
+			next_car = self.car_list[0]
+		print("next car: ", next_car.position)
+		return next_car
