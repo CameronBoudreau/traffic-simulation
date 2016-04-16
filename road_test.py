@@ -16,11 +16,9 @@ car_list = [car1, car2, car3]
 sim = Sim()
 
 def test_reset_car_position_on_loop():
-	# print("road.loop(car_list)[0].position: ", road.loop(car_list)[0].position)
-	car_list = [car7, car8, car9]
-	car_list = road.road_loop(car_list, car9, car7)
-	print("Car list after loop: ", car_list[0].position[0])
-	assert car_list[0].position[0] == 5
+	car3.move_car()
+	road.road_loop(car_list, car3, car1)
+	assert car_list[0].position[0] == 10
 
 def test_check_car_values():
 
@@ -60,7 +58,26 @@ def test_check_move_car():
 	car6.move_car()
 	assert car6.position == [510, 1]
 
+def find_next_car():
+	car_list = [car10, car11, car12]
+	
+	assert find_next_car(car10, car_list) == car11
+	assert find_next_car(car11, car_list) == car12
+	assert find_next_car(car12, car_list) == car10
+
+def test_update_positions():
+	car13 = Car([110,0])
+	car14 = Car([450,0])
+	car15 = Car([997,0])
+
+	sim.car_list = [car13, car14, car15]
+	# print("This is what's actualy in the car list: ", car14, car15)
+	sim.update_positions(road)
+	assert  sim.car_position_list == [[120,1], [460, 1], [7,1]] 
+
+
+
 # def test_update_positions():
 # 	car_list = [car7, car8, car9]
 # 	sim.update_car_positions(road)
-# 	assert car6.positions 
+# 	assert car6.positions
