@@ -5,7 +5,6 @@ class Road():
 		self.curve = curve
 
 	def road_loop(self , car_list, car, next_car):
-		print("Car position: ", car.position)
 		if next_car.bumper < 6:
 			car.position[0] = 1000
 		else:
@@ -38,23 +37,18 @@ class Car():
 
 	def collision_check(self, next_car):
 		difference = next_car.bumper - self.position[0]
-		print("In collision change car pos: ", self.position)
-		print("difference: ", difference)
 		if difference < self.speed:
 			if difference <= 0:
 				self.position[0] = next_car.bumper - 2
 				self.speed = 0
 			else:
 				self.speed = next_car.speed
-		print("Last collision change car pos: ", self.position)
 		return self.position
 
 
 	def move_car(self):
-		print("Position before move: ", self.position)
 		self.position[0] += self.speed
 		self.position[1] +=  1
-		print("Position after move: ", self.position)
 		return self.position
 
 	def needs_road_loop(self):
@@ -74,22 +68,15 @@ class Sim():
 
 	def update_positions(self, road):
 		for i, car in enumerate(self.car_list):
-			print("Run ", i)
 			next_car = self.find_next_car(car, self.car_list, i)
 			# print("next car: ", str(next_car))
-			print("Before move")
 			car.move_car()
-			print("After move")
 			if car.needs_road_loop():
 				road.road_loop(self.car_list, car, next_car)
-			print("After loop")
 			car.change_speed()
-			print("After speed change car pos: ", car.position)
 			car.position = car.collision_check(next_car)
-			print("After speed collision car pos: ", car.position)
 			self.car_position_list.append(car.position)
 
-			print("Sim list: ", self.car_position_list)
 		return self.car_position_list
 
 
@@ -98,5 +85,4 @@ class Sim():
 			next_car = self.car_list[i+1]
 		else:
 			next_car = self.car_list[0]
-		print("next car: ", next_car.position)
 		return next_car
