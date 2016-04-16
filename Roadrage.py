@@ -7,8 +7,9 @@ class Road():
 	def road_loop(self , car_list, car, next_car):
 		if next_car.bumper < 6:
 			car.position[0] = 1000
+			car.speed = 0
 		else:
-			car.position[0] = car.position[0] - 1000
+			car.position[0] -= 1000
 			car_list.insert(0,car_list.pop())
 		return car_list
 
@@ -62,21 +63,23 @@ class Sim():
 		self.car_position_list = []
 
 
+	def __str__():
+		print("Runs the simulation.")
+
 	def create_cars(self):
 		self.car_list = [Car([i * 30, 0]) for i in range(self.num_of_cars)]
 		return self.car_list
 
 	def update_positions(self, road):
 		for i, car in enumerate(self.car_list):
-			next_car = self.find_next_car(car, self.car_list, i)
-			# print("next car: ", str(next_car))
+			self.next_car = self.find_next_car(car, self.car_list, i)
 			car.move_car()
 			if car.needs_road_loop():
-				road.road_loop(self.car_list, car, next_car)
+				road.road_loop(self.car_list, car, self.next_car)
+			else:
+				car.position = car.collision_check(self.next_car)
 			car.change_speed()
-			car.position = car.collision_check(next_car)
 			self.car_position_list.append(car.position)
-
 		return self.car_position_list
 
 
