@@ -1,3 +1,4 @@
+import numpy as np
 import random
 
 class Road():
@@ -22,7 +23,7 @@ class Road():
 		return car_list
 
 class Car():
-	def __init__(self, position, max_speed = 33.3, length = 5, speed = 10):
+	def __init__(self, position, max_speed = 33, length = 5, speed = 10):
 		self.length = length
 		self.position = position
 		self.bumper = self.position[0] - 5
@@ -120,7 +121,7 @@ class Sim():
 			self.car_position_list.insert(0, car.position)
 		else:
 			self.car_position_list.append(car.position)
-		# return self.car_position_list
+		
 
 	def add_to_speed_list(self, car, car_list):
 		if car == car_list[-1] and car.position[0] < car.max_speed + 1:
@@ -142,46 +143,36 @@ def main():
 	sim = Sim()
 	road = Road()
 
-	store_each_second = []
+	""" Master holds list of lists (inner lists are positions each sec) """
+	master_list = []
+
 	sim.create_cars()
+
 	start_list = []
-	
+
 	for i in sim.car_list:
 		start_list.append(i.position)
-	
-	print("\n\nInitial position list:\n", start_list)
-	# # store_each_second.append(start_list)
-	# print("\n\nInitial position list:\n", store_each_second)
-	
-	# tester = sim.update_positions(road)
-	# # print("\nMAIN After just update pos - NO append\n", store_each_second)
-	
-	# # print("Tester after sim:\n", list_2)
-	# store_each_second.append(tester)
-	# print("\nMAIN After just update pos - APPEND\n", store_each_second)
+
+	""" Starts the master list with the initial car positions """
+	master_list.append(np.array(start_list))
+	print("\n Initial MASTER list:\n", master_list)
 
 
-
-	for i in range(1,4):
+	""" Loops through updating car positions and supposedly appending each run to the master list """
+	for i in range(1,65):
 		print("\nRound {}:".format(i))
-		# print("\n\nMAIN list at START\n{}\n".format(positions_over_time))
-		# start_list.append(i.position)
-		# print("\n\nInitial position list:\n", start_list)
+		print("\nMASTER list at START\n{}\n".format(master_list))
 		
-		sim.update_positions(road)
-		store_each_second.append(start_list)
-		# print("\n\nInitial position list:\n", start_list)
-		print("\nMAIN BEFORE just update pos - NO append\n", store_each_second)
-		tester = sim.update_positions(road)
-		print("\nMAIN After just update pos - NO append\n", tester)
-		store_each_second.append(tester)
-		print("\nMAIN After just update pos - APPEND\n", store_each_second)
+		x = np.array(sim.update_positions(road))
+		
+		print("\nMASTER list BEFORE Append - AFTER positions updated in method\n{}\n".format(master_list))
+		# master_list.append(sim.car_position_list)
+		
+		z = np.copy(x)
 
-		# print("\nMAIN list at END\n{}\n\n".format(positions_over_time))
-
-
-	# print("\nFirst position list entry: ", positions_over_time[0])
-	# print("\nSecond position list entry: ", positions_over_time[1])
+		master_list.append(np.copy(z))
+		
+		print("\nMASTER list AFTER Append\n{}\n\n".format(master_list))
 
 
 main()
