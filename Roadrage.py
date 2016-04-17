@@ -83,6 +83,8 @@ class Sim():
 		for i, car in enumerate(self.car_list):
 			# print("\nRun: ", i+1)
 			# print("Car pos + spd at start: ", car.position, car.speed)
+			
+			#
 			self.next_car = self.find_next_car(car, self.car_list, i)
 			car.move_car()
 
@@ -118,7 +120,7 @@ class Sim():
 			self.car_position_list.insert(0, car.position)
 		else:
 			self.car_position_list.append(car.position)
-
+		# return self.car_position_list
 
 	def add_to_speed_list(self, car, car_list):
 		if car == car_list[-1] and car.position[0] < car.max_speed + 1:
@@ -135,26 +137,6 @@ class Sim():
 		return next_car
 
 
-<<<<<<< HEAD
-sim = Sim()
-
-def main():
-	car_stat_list = []
-	
-	for _ in range():
-		car_stat_list.append()
-
-	sim.create_cars()
-	print(sim.car_list)
-	road = Road()
-	sim.update_positions(road)
-	#??? car? sim.car? 
-	sim.find_next_car(car,car_list,i)
-
-if __name__ == '__main__':
-	main()
-
-=======
 def main():
 
 	sim = Sim()
@@ -163,38 +145,44 @@ def main():
 	store_each_second = []
 	sim.create_cars()
 	start_list = []
-	#
-	# for i in sim.car_list:
-	# 	start_list.append(i.position)
-	#
-	# store_each_second.append(start_list)
-	# # print("\n\nInitial position list:\n", store_each_second)
-	#
+	
+	for i in sim.car_list:
+		start_list.append(i.position)
+	
+	print("\n\nInitial position list:\n", start_list)
+	# # store_each_second.append(start_list)
+	# print("\n\nInitial position list:\n", store_each_second)
+	
 	# tester = sim.update_positions(road)
 	# # print("\nMAIN After just update pos - NO append\n", store_each_second)
-	#
+	
 	# # print("Tester after sim:\n", list_2)
 	# store_each_second.append(tester)
 	# print("\nMAIN After just update pos - APPEND\n", store_each_second)
 
 
 
-	for i in range(1,3):
+	for i in range(1,4):
 		print("\nRound {}:".format(i))
-		print("\n\nMAIN list at START\n{}\n".format(positions_over_time))
-
+		# print("\n\nMAIN list at START\n{}\n".format(positions_over_time))
+		# start_list.append(i.position)
+		# print("\n\nInitial position list:\n", start_list)
+		
 		sim.update_positions(road)
-		# positions_over_time.append(add_this)
-		print("\nCar positions from sim:\n{}\n".format(sim.car_position_list))
-		print("\nMAIN list in MID\n{}\n".format(positions_over_time))
-		# positions_over_time.append(sim.car_position_list)
+		store_each_second.append(start_list)
+		# print("\n\nInitial position list:\n", start_list)
+		print("\nMAIN BEFORE just update pos - NO append\n", store_each_second)
+		tester = sim.update_positions(road)
+		print("\nMAIN After just update pos - NO append\n", tester)
+		store_each_second.append(tester)
+		print("\nMAIN After just update pos - APPEND\n", store_each_second)
 
-		print("\nMAIN list at END\n{}\n\n".format(positions_over_time))
+		# print("\nMAIN list at END\n{}\n\n".format(positions_over_time))
 
 
-	print("\nFirst position list entry: ", positions_over_time[0])
-	print("\nSecond position list entry: ", positions_over_time[1])
+	# print("\nFirst position list entry: ", positions_over_time[0])
+	# print("\nSecond position list entry: ", positions_over_time[1])
 
 
 main()
->>>>>>> 66c902a1b2c867fa8150b25975b9fa1046d742ae
+
