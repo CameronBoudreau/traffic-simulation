@@ -36,6 +36,7 @@ def test_road_value():
 def test_car_creater():
 	assert len(sim.create_cars()) == 30
 
+	#Why did we change this into a set?
 	car_set = set([i.position[0] for i in sim.create_cars()])
 
 	assert len(car_set) == 30

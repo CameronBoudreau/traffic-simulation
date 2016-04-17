@@ -101,3 +101,22 @@ class Sim():
 		print("next car: ", next_car.position)
 		return next_car
 
+
+sim = Sim()
+
+def main():
+	car_stat_list = []
+	
+	for _ in range():
+		car_stat_list.append()
+
+	sim.create_cars()
+	print(sim.car_list)
+	road = Road()
+	sim.update_positions(road)
+	#??? car? sim.car? 
+	sim.find_next_car(car,car_list,i)
+
+if __name__ == '__main__':
+	main()
+
