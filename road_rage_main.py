@@ -1,5 +1,6 @@
-%matplotlib inline
 import matplotlib.pyplot as plt
+import math
+import statistics as st
 import random
 import numpy as np
 
@@ -34,7 +35,7 @@ class Car():
 
 
 	def change_speed(self):
-		if random.randint(1,10) == 7:
+		if random.randint(1,10) == 7 and self.speed != 0:
 			self.speed -= self.accel
 		elif self.speed + self.accel > self.max_speed:
 			self.speed = self.max_speed
@@ -106,65 +107,75 @@ class Sim():
 
 
 
+def main():
+    sim = Sim()
+    road = Road()
 
-sim = Sim()
-road = Road()
+    varied_max_speed_position_dict = {}
+    varied_max_speed_speed_dict = {}
 
-varied_max_speed_position_dict = {}
-varied_max_speed_speed_dict = {}
+    means_and_devs = []
 
-for idx in range(12, 21):
-    master_list = []
-    master_speed_list = []
-    limit = idx*2
+    for idx in range(12, 22):
+        master_list = []
+        master_speed_list = []
+        limit = idx*2
 
-    sim.create_cars(limit)
+        sim.create_cars(limit)
 
-    start_list = []
+        start_list = []
 
-    for i in sim.car_list:
-        start_list.append(i.position)
+        for i in sim.car_list:
+            start_list.append(i.position)
 
-    master_list.append(np.array(start_list))
+        master_list.append(np.array(start_list))
 
-    for sec in range(60):
-        sim.update_positions(road)
-        master_list.append(np.copy(sim.car_position_list))
-        master_speed_list.append(np.copy(sim.car_speed_list))
-
-
-    all_xs = []
-    all_ys = []
-
-    for second in master_list:
-        for position in second:
-            all_xs.append(position[0])
-
-    for second in master_list:
-        for position in second:
-            all_ys.append(position[1])
-
-    plt.plot(all_xs, all_ys, 'ro')
-    plt.ylabel("Time")
-    plt.xlabel("Position")
-    plt.title("Speed Limit {}".format(idx*2))
-    plt.axis([0, 1000, 0, 61])
-    plt.show()
-
-    varied_max_speed_speed_dict[limit] = master_speed_list
-    varied_max_speed_position_dict[limit] = master_list
+        for sec in range(60):
+            sim.update_positions(road)
+            master_list.append(np.copy(sim.car_position_list))
+            master_speed_list.append(np.copy(sim.car_speed_list))
 
 
+        all_xs = []
+        all_ys = []
 
-master_list_34_ms = varied_max_speed_position_dict[34]
-all_xs = []
+        for second in master_list:
+            for position in second:
+                all_xs.append(position[0])
 
-for second in master_list_34_ms:
-    for position in second:
-        all_xs.append(position[0])
+        for second in master_list:
+            for position in second:
+                all_ys.append(position[1])
 
-all_ys = []
+        plt.plot(all_xs, all_ys, 'ro')
+        plt.ylabel("Time")
+        plt.xlabel("Position")
+        plt.title("Speed Limit {}".format(idx*2))
+        plt.axis([0, 1000, 0, 61])
+        plt.show()
 
-for second in master_list_34_ms:
-    for position in second:
-        all_ys.append(position[1])
+        all_speeds = []
+
+        for second in master_speed_list:
+            for speed in second:
+                all_speeds.append(speed)
+
+        mean = st.mean(all_speeds)
+        stdev = st.stdev(all_speeds)
+
+        means_and_devs.append(mean + stdev)
+
+        plt.boxplot(all_speeds, 0, '+')
+        plt.ylabel("Speed")
+        plt.title("At {} M/S max speed\n********************\nMean: {}\nStandard Deviation: {}\nMean+ 1 Stdev: {}".format((idx*2),mean, stdev, mean + stdev))
+        plt.show()
+        print()
+        varied_max_speed_speed_dict[limit] = master_speed_list
+        varied_max_speed_position_dict[limit] = master_list
+
+    print("\n************************************************\n")
+    print("That means that {} km/h is the best speed limit!".format(round(3.6 * st.mean(means_and_devs))))
+    print("\n************************************************\n")
+
+if __name__ == '__main__':
+    main()
