@@ -49,11 +49,9 @@ class Car():
 		difference = (next_car.position[0] - 5) - self.position[0]
 		if difference < self.speed:
 			if difference <= 0:
-				print("Traffic detected. Stopping!")
 				self.position[0] = next_car.position[0] - 7
 				self.speed = 0
 			else:
-				print("Traffic detected. Slowing down!")
 				self.speed = next_car.speed
 		return self.position
 
@@ -78,8 +76,8 @@ class Sim():
 	def __str__():
 		print("Runs the simulation.")
 
-	def create_cars(self):
-		self.car_list = [Car([i * 30 + 1, 0], i+1) for i in range(self.num_of_cars)]
+	def create_cars(self, max_speed):
+		self.car_list = [Car([i * 32 + 1, 0], i+1, max_speed = max_speed) for i in range(self.num_of_cars)]
 		return self.car_list
 
 	def update_positions(self, road):
@@ -131,25 +129,36 @@ def main():
 	sim = Sim()
 	road = Road()
 
-	master_list = []
+	varied_max_speed_position_dict = {}
+	varied_max_speed_speed_dict = {}
 
-	sim.create_cars()
+	for idx in range(12, 21):
+		master_list = []
+		master_speed_list = []
+		limit = idx*2
 
-	start_list = []
+		sim.create_cars(limit)
+		start_list = []
 
-	for i in sim.car_list:
-		start_list.append(i.position)
-	master_list.append(np.array(start_list))
-	# print("\n Initial MASTER list:\n", master_list)
+		for i in sim.car_list:
+			start_list.append(i.position)
 
-	for i in range(60):
-		# print("\nRound {}:".format(i))
-		# print("\nMASTER list at START\n{}\n".format(master_list))
-		sim.update_positions(road)
+		master_list.append(np.array(start_list))
+		# print("\n Initial MASTER list:\n", master_list)
 
-		# print("\nMASTER list BEFORE Append - AFTER positions updated in method\n{}\n".format(master_list))
-		master_list.append(np.copy(sim.car_position_list))
+		for sec in range(60):
+			# print("\nRound {}:".format(i))
+			# print("\nMASTER list at START\n{}\n".format(master_list))
+			sim.update_positions(road)
 
-	print("\nMASTER list AFTER Append\n{}\n\n".format(master_list))
+			# print("\nMASTER list BEFORE Append - AFTER positions updated in method\n{}\n".format(master_list))
+			master_list.append(np.copy(sim.car_position_list))
+			master_speed_list.append(np.copy(sim.car_speed_list))
+
+		# print("\nMASTER list AFTER Append\n{}\n\n".format(master_list))
+
+		varied_max_speed_speed_dict[limit] = master_speed_list
+		varied_max_speed_position_dict[limit] = master_list
+	# print("\nVARIED SPEEDS POSITION DICT\n{}\n\n".format(varied_max_speed_position_dict))
 
 main()
