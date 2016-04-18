@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+import math
+import statistics as st
 import random
 import numpy as np
 
@@ -8,18 +11,12 @@ class Road():
 
 	def road_loop(self , car_list, car, next_car):
 		if next_car.position[0] - 5 < 6:
-			# print("Next car position < 6: ", next_car.position)
-			# print("Next car bumper < 6: ", next_car.position[0] - 5)
 			car.position[0] = 1000
 			car.speed = 0
 		else:
 			car.position[0] -= 1000
-			# print("Car list in road loop else before pop: ", car_list[0].position, car_list[1].position, car_list[2].position)
 			car_list.insert(0,car_list.pop())
-			# print("Car list in road loop else after pop: ", car_list[0].position, car_list[1].position, car_list[2].position)
-			car.change_speed()
 			car.collision_check(next_car)
-		# print("Car list car 1: ", car_list[0].position)
 		return car_list
 
 class Car():
@@ -38,7 +35,7 @@ class Car():
 
 
 	def change_speed(self):
-		if random.randint(1,10) == 7:
+		if random.randint(1,10) == 7 and self.speed != 0:
 			self.speed -= self.accel
 		elif self.speed + self.accel > self.max_speed:
 			self.speed = self.max_speed
@@ -77,44 +74,28 @@ class Sim():
 		print("Runs the simulation.")
 
 	def create_cars(self, max_speed):
-		self.car_list = [Car([i * 32 + 1, 0], i+1, max_speed = max_speed) for i in range(self.num_of_cars)]
+		self.car_list = [Car([i * 32 + 1, 1], i+1, max_speed = max_speed) for i in range(self.num_of_cars)]
 		return self.car_list
 
 	def update_positions(self, road):
 		self.car_position_list = []
 		for i, car in enumerate(self.car_list):
-			# print("\nRun: ", i+1)
-			# print("Car pos + spd at start: ", car.position, car.speed)
-			
-			#
 			self.next_car = self.find_next_car(car, self.car_list, i)
 			car.move_car()
 
 			if car == self.car_list[-1]:
 				if car.needs_road_loop():
-					# print("\nCar pos when needing loop: ", car.position)
-					# print("\nCar[0] when needing loop: ", self.car_list[0].position)
 					self.car_list = road.road_loop(self.car_list, car, self.next_car)
 				else:
 					car.change_speed()
 
 			else:
-				# print("Car pos before speed change: ", car.position)
 				car.change_speed()
-				# print("\nCar pos before collision_check: ", car.position)
-				# print("Next car pos before collision_check: ", self.next_car.position)
 				car.position = car.collision_check(self.next_car)
-				# print("Car pos after collision_check: ", car.position)
 
-			# print("Car pos after updates: ", car.position)
-			# self.add_to_position_list(car, self.car_list)
-			# print("\nCar list after add to positions: ", self.car_list[0].position, self.car_list[1].position, self.car_list[2].position)
-			# print("\nPostion list: ", self.car_position_list)
 		self.car_speed_list = [car.speed for car in self.car_list]
 		self.car_position_list = [car.position for car in self.car_list]
 
-			# print("Car pos + spd at end: ", car.position, car.speed)
-		# print("\nCar position list: ", self.car_position_list)
 
 	def find_next_car(self, car, car_list, i):
 		if car != self.car_list[-1]:
@@ -124,41 +105,101 @@ class Sim():
 		return next_car
 
 
+
 def main():
+    sim = Sim()
+    road = Road()
 
-	sim = Sim()
-	road = Road()
+    varied_max_speed_position_dict = {}
+    varied_max_speed_speed_dict = {}
 
-	varied_max_speed_position_dict = {}
-	varied_max_speed_speed_dict = {}
+    means_and_devs = []
 
-	for idx in range(12, 21):
-		master_list = []
-		master_speed_list = []
-		limit = idx*2
+    for idx in range(12, 22):
+        master_list = []
+        master_speed_list = []
+        limit = idx*2
 
-		sim.create_cars(limit)
-		start_list = []
+        sim.create_cars(limit)
 
-		for i in sim.car_list:
-			start_list.append(i.position)
+        start_list = []
 
-		master_list.append(np.array(start_list))
-		# print("\n Initial MASTER list:\n", master_list)
+        for i in sim.car_list:
+            start_list.append(i.position)
 
-		for sec in range(60):
-			# print("\nRound {}:".format(i))
-			# print("\nMASTER list at START\n{}\n".format(master_list))
-			sim.update_positions(road)
+        master_list.append(np.array(start_list))
 
-			# print("\nMASTER list BEFORE Append - AFTER positions updated in method\n{}\n".format(master_list))
-			master_list.append(np.copy(sim.car_position_list))
-			master_speed_list.append(np.copy(sim.car_speed_list))
+        for sec in range(60):
+            sim.update_positions(road)
+            master_list.append(np.copy(sim.car_position_list))
+            master_speed_list.append(np.copy(sim.car_speed_list))
 
-		# print("\nMASTER list AFTER Append\n{}\n\n".format(master_list))
 
-		varied_max_speed_speed_dict[limit] = master_speed_list
-		varied_max_speed_position_dict[limit] = master_list
-	# print("\nVARIED SPEEDS POSITION DICT\n{}\n\n".format(varied_max_speed_position_dict))
+        # all_xs = []
+        # all_ys = []
 
-main()
+        # for second in master_list:
+        #     for position in second:
+        #         all_xs.append(position[0])
+
+        # for second in master_list:
+        #     for position in second:
+        #         all_ys.append(position[1])
+
+        all_xs = [position[0] for second in master_list for position in second]
+        all_ys = [position[1] for second in master_list for position in second]
+
+        plt.plot(all_xs, all_ys, 'ro')
+        plt.ylabel("Time")
+        plt.xlabel("Position")
+        plt.title("Speed Limit {}".format(idx*2))
+        plt.axis([0, 1000, 0, 61])
+        plt.show()
+
+        # plt.style.use('dark_background')
+        # ncolors = len(plt.rcParams['axes.prop_cycle'])
+        # plt.plot(all_xs, all_ys, '+')
+        # plt.xlabel("Position")
+        # plt.ylabel("Speed")
+        # plt.title("LOL if this works")
+        # plt.axis([0, 1000, 0, 61])
+        # plt.show()
+
+        # all_speeds = []
+
+        # for second in master_speed_list:
+        #     for speed in second:
+        #         all_speeds.append(speed)
+
+        all_speeds = [speed for second in master_speed_list for speed in second]
+
+        mean = st.mean(all_speeds)
+        stdev = st.stdev(all_speeds)
+
+        means_and_devs.append(mean + stdev)
+
+        plt.boxplot(all_speeds, 0, '+')
+        plt.ylabel("Speed")
+        plt.title("At {} M/S max speed\n********************\nMean: {}\nStandard Deviation: {}\nMean+ 1 Stdev: {}".format((idx*2),mean, stdev, mean + stdev))
+        plt.show()
+        print()
+        varied_max_speed_speed_dict[limit] = master_speed_list
+        varied_max_speed_position_dict[limit] = master_list
+
+        plt.style.use('dark_background')
+        ncolors = len(plt.rcParams['axes.prop_cycle'])
+        plt.plot(all_xs, all_ys, '+')
+        plt.xlabel("Position")
+        plt.ylabel("Speed")
+        plt.title("LOL if this works")
+        plt.axis([0, 1000, 0, 61])
+        plt.show()
+
+
+      
+    print("\n************************************************\n")
+    print("That means that {} km/h is the best speed limit!".format(round(3.6 * st.mean(means_and_devs))))
+    print("\n************************************************\n")
+
+if __name__ == '__main__':
+    main()
