@@ -1,4 +1,5 @@
 from Roadrage import *
+import numpy as np
 
 road = Road()
 

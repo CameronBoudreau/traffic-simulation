@@ -1,5 +1,5 @@
-import numpy as np
 import random
+import numpy as np
 
 class Road():
 	def __init__(self, length = 1000,curve = 0):
@@ -23,9 +23,10 @@ class Road():
 		return car_list
 
 class Car():
-	def __init__(self, position, max_speed = 33, length = 5, speed = 10):
+	def __init__(self, position, carID = 0, max_speed = 33, length = 5, speed = 10):
 		self.length = length
 		self.position = position
+		self.carid = carID
 		self.bumper = self.position[0] - 5
 		self.max_speed = max_speed
 		self.speed = speed
@@ -33,13 +34,13 @@ class Car():
 
 
 	def __str__(self):
-		"I'm at position {}".format(self.position)
+		"I'm car #{}, at position {}".format(self.carid, self.position)
 
 
 	def change_speed(self):
 		if random.randint(1,10) == 7:
 			self.speed -= self.accel
-		if self.speed + self.accel > self.max_speed:
+		elif self.speed + self.accel > self.max_speed:
 			self.speed = self.max_speed
 		else:
 			self.speed += self.accel
@@ -48,9 +49,11 @@ class Car():
 		difference = (next_car.position[0] - 5) - self.position[0]
 		if difference < self.speed:
 			if difference <= 0:
+				print("Traffic detected. Stopping!")
 				self.position[0] = next_car.position[0] - 7
 				self.speed = 0
 			else:
+				print("Traffic detected. Slowing down!")
 				self.speed = next_car.speed
 		return self.position
 
@@ -76,7 +79,7 @@ class Sim():
 		print("Runs the simulation.")
 
 	def create_cars(self):
-		self.car_list = [Car([i * 30 + 1, 0]) for i in range(self.num_of_cars)]
+		self.car_list = [Car([i * 30 + 1, 0], i+1) for i in range(self.num_of_cars)]
 		return self.car_list
 
 	def update_positions(self, road):
@@ -106,29 +109,14 @@ class Sim():
 				# print("Car pos after collision_check: ", car.position)
 
 			# print("Car pos after updates: ", car.position)
-			self.add_to_position_list(car, self.car_list)
+			# self.add_to_position_list(car, self.car_list)
 			# print("\nCar list after add to positions: ", self.car_list[0].position, self.car_list[1].position, self.car_list[2].position)
 			# print("\nPostion list: ", self.car_position_list)
-			self.add_to_speed_list(car, self.car_list)
+		self.car_speed_list = [car.speed for car in self.car_list]
+		self.car_position_list = [car.position for car in self.car_list]
+
 			# print("Car pos + spd at end: ", car.position, car.speed)
 		# print("\nCar position list: ", self.car_position_list)
-
-		return self.car_position_list
-
-
-	def add_to_position_list(self, car, car_list):
-		if car == car_list[-1] and car.position[0] < car.max_speed + 1:
-			self.car_position_list.insert(0, car.position)
-		else:
-			self.car_position_list.append(car.position)
-		
-
-	def add_to_speed_list(self, car, car_list):
-		if car == car_list[-1] and car.position[0] < car.max_speed + 1:
-			self.car_speed_list.insert(0, car.speed)
-		else:
-			self.car_speed_list.append(car.speed)
-
 
 	def find_next_car(self, car, car_list, i):
 		if car != self.car_list[-1]:
@@ -143,7 +131,6 @@ def main():
 	sim = Sim()
 	road = Road()
 
-	""" Master holds list of lists (inner lists are positions each sec) """
 	master_list = []
 
 	sim.create_cars()
@@ -152,28 +139,17 @@ def main():
 
 	for i in sim.car_list:
 		start_list.append(i.position)
-
-	""" Starts the master list with the initial car positions """
 	master_list.append(np.array(start_list))
-	print("\n Initial MASTER list:\n", master_list)
+	# print("\n Initial MASTER list:\n", master_list)
 
+	for i in range(60):
+		# print("\nRound {}:".format(i))
+		# print("\nMASTER list at START\n{}\n".format(master_list))
+		sim.update_positions(road)
 
-	""" Loops through updating car positions and supposedly appending each run to the master list """
-	for i in range(1,65):
-		print("\nRound {}:".format(i))
-		print("\nMASTER list at START\n{}\n".format(master_list))
-		
-		x = np.array(sim.update_positions(road))
-		
-		print("\nMASTER list BEFORE Append - AFTER positions updated in method\n{}\n".format(master_list))
-		# master_list.append(sim.car_position_list)
-		
-		z = np.copy(x)
+		# print("\nMASTER list BEFORE Append - AFTER positions updated in method\n{}\n".format(master_list))
+		master_list.append(np.copy(sim.car_position_list))
 
-		master_list.append(np.copy(z))
-		
-		print("\nMASTER list AFTER Append\n{}\n\n".format(master_list))
-
+	print("\nMASTER list AFTER Append\n{}\n\n".format(master_list))
 
 main()
-
