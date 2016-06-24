@@ -2,7 +2,7 @@
 
 Simulates traffic along a road to determine the optimal speed for that road to avoid jams and collisions.
 
-To view graphs, install from requirements.txt and run jupyter notebook.
+To view graphs, install from requirements.txt and run jupyter notebook or view in the Testing.ipynb file.
 
 This is done through 3 classes:
 
