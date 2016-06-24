@@ -42,16 +42,8 @@ def main():
             master_speed_list.append(np.copy(sim.car_speed_list))
 
         # Creates a list for each x and y position of the cars for plotting.
-        all_xs = []
-        all_ys = []
-
-        for second in master_list:
-            for position in second:
-                all_xs.append(position[0])
-
-        for second in master_list:
-            for position in second:
-                all_ys.append(position[1])
+        all_xs = [position[0] for second in master_list for position in second]
+        all_ys = [position[1] for second in master_list for position in second]
 
         # Creates the graph of positions
         plt.plot(all_xs, all_ys, 'ro')
@@ -61,11 +53,9 @@ def main():
         plt.axis([0, 1000, 0, 61])
         plt.show()
 
-        all_speeds = []
-
-        for second in master_speed_list:
-            for speed in second:
-                all_speeds.append(speed)
+		# Creates a full list of speeds of all cars at each second of the
+		# minute.
+        all_speeds = [spd for second in master_speed_list for spd in second]
 
         mean = st.mean(all_speeds)
         stdev = st.stdev(all_speeds)
@@ -82,7 +72,16 @@ def main():
         varied_max_speed_speed_dict[limit] = master_speed_list
         varied_max_speed_position_dict[limit] = master_list
 
-    # Calculates the average speed plus one standard deviation.
+        plt.style.use('dark_background')
+        ncolors = len(plt.rcParams['axes.prop_cycle'])
+        plt.plot(all_xs, all_ys, '+')
+        plt.xlabel("Position")
+        plt.ylabel("Speed")
+        plt.title("LOL if this works")
+        plt.axis([0, 1000, 0, 61])
+        plt.show()
+
+	# Calculates the average speed plus one standard deviation.
     mean_speed = round(3.6 * st.mean(means_plus_devs))
 
     print("\n************************************************\n")
